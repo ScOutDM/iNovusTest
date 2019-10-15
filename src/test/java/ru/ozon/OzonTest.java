@@ -55,8 +55,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Открывает страницу браузера с указанным URL
      */
-    @Description("1. Открыть в браузере сайт https://www.ozon.ru/")
-    @Test
+    @Test(description = "1. Открыть в браузере сайт https://www.ozon.ru/")
     public void urlOpeningTest() {
         driver.get("https://www.ozon.ru/");
 
@@ -66,8 +65,8 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Осуществляет переход в категорию товаров
      */
-    @Description("2. В меню \"Каталог\" выбрать категорию \"Музыка\"")
-    @Test(dependsOnMethods = {"urlOpeningTest"})
+
+    @Test(dependsOnMethods = {"urlOpeningTest"}, description = "2. В меню \"Каталог\" выбрать категорию \"Музыка\"")
     public void categoryOpeningTest() {
         driver.findElement(By.cssSelector("button[value=\"Каталог\"]")).click();
         driver.findElement(By.cssSelector("[href=\"/category/muzyka-13100/\"]")).click();
@@ -78,8 +77,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Осуществляет переход в подкатегорию товаров
      */
-    @Description("3. С открывшейся страницы перейти на страницу \"Виниловые пластинки\"")
-    @Test(dependsOnMethods = {"categoryOpeningTest"})
+    @Test(dependsOnMethods = {"categoryOpeningTest"}, description = "3. С открывшейся страницы перейти на страницу \"Виниловые пластинки\"")
     public void categorySelectionTest() {
         driver.findElement(By.cssSelector("[href=\"/category/vinilovye-plastinki-31667/\"]")).click();
         wait = new WebDriverWait(driver, 10);
@@ -91,8 +89,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Получает DOM список товаров из документа
      */
-    @Description("4. Проверить, что открылся список товаров")
-    @Test(dependsOnMethods = {"categorySelectionTest"})
+    @Test(dependsOnMethods = {"categorySelectionTest"}, description = "4. Проверить, что открылся список товаров")
     public void checkNotEmptyItemListTest() {
         itemSearchResult = driver.findElement(By.cssSelector("div.tiles[data-v-4d7067c2]"));
         itemList = itemSearchResult.findElements(By.className("inner-link"));
@@ -103,8 +100,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Получает размер списка товаров
      */
-    @Description("5. Получить количество товаров на странице")
-    @Test(dependsOnMethods = {"checkNotEmptyItemListTest"})
+    @Test(dependsOnMethods = {"checkNotEmptyItemListTest"}, description = "5. Получить количество товаров на странице")
     public void getTheQuantityOfItemsTest() {
         itemQuantity = itemList.size();
 
@@ -114,8 +110,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Использует класс RandomItem() для генерации случайного индекса товара
      */
-    @Description("6. Сгенерировать случайное число в диапазоне от 1 до количества товаров, полученного в п.5")
-    @Test(dependsOnMethods = {"getTheQuantityOfItemsTest"})
+    @Test(dependsOnMethods = {"getTheQuantityOfItemsTest"}, description = "6. Сгенерировать случайное число в диапазоне от 1 до количества товаров, полученного в п.5")
     public void getItemIndexTest() {
         itemIndex = new RandomItem().getRandomItem(itemQuantity);
 
@@ -125,8 +120,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Выбирает товар по индексу и переходит на страницу товара
      */
-    @Description("7. Выбрать товар под номером, полученным в п.6. ( Перейти на страницу товара )")
-    @Test(dependsOnMethods = {"getItemIndexTest"})
+    @Test(dependsOnMethods = {"getItemIndexTest"}, description = "7. Выбрать товар под номером, полученным в п.6. ( Перейти на страницу товара )")
     public void getItemPageTest() {
         WebElement itemByIndex = itemList.get(itemIndex);
         itemByIndex.click();
@@ -139,8 +133,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Сохраняет информацию о товаре в ссылочной переменной
      */
-    @Description("8. Запомнить стоимость и название данного товара")
-    @Test(dependsOnMethods = {"getItemPageTest"})
+    @Test(dependsOnMethods = {"getItemPageTest"}, description = "8. Запомнить стоимость и название данного товара")
     public void getItemDetailsTest() {
         detail = driver.findElement(By.className("detail"));
 
@@ -158,8 +151,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Добавляет товар в корзину
      */
-    @Description("9. Добавить товар в корзину")
-    @Test(dependsOnMethods = {"getItemDetailsTest"})
+    @Test(dependsOnMethods = {"getItemDetailsTest"}, description = "9. Добавить товар в корзину")
     public void addToCart() {
         detail.findElement(By.cssSelector("button._652bc6")).click();
 
@@ -171,8 +163,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Проверяет наличие товара в корзине
      */
-    @Description("10. Проверить то, что в корзине появился добавленный в п.9 товар")
-    @Test(dependsOnMethods = {"addToCart"})
+    @Test(dependsOnMethods = {"addToCart"}, description = "10. Проверить то, что в корзине появился добавленный в п.9 товар")
     public void cartAfterAddingFirstProduct() {
         try {
             Thread.sleep(3000);
@@ -197,8 +188,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Возвращает на страницу подкатегории
      */
-    @Description("11. Вернуться на страницу \"Виниловые пластинки\"")
-    @Test(dependsOnMethods = {"cartAfterAddingFirstProduct"})
+    @Test(dependsOnMethods = {"cartAfterAddingFirstProduct"}, description = "11. Вернуться на страницу \"Виниловые пластинки\"")
     public void getBackTest() {
         driver.findElement(By.cssSelector("button[value=\"Каталог\"]")).click();
         driver.findElement(By.cssSelector("[href=\"/category/muzyka-13100/\"]")).click();
@@ -222,7 +212,7 @@ public class OzonTest extends WebDriverSettings {
      * Использует класс RandomItem() для генерации случайного числа
      */
     @Description("12. Сгенерировать случайное число в диапазоне от 1 до количества товаров, полученного в п.5")
-    @Test(dependsOnMethods = {"getBackTest"})
+    @Test(dependsOnMethods = {"getBackTest"}, description = "12. Сгенерировать случайное число в диапазоне от 1 до количества товаров, полученного в п.5")
     public void getSecondItemIndexTest() {
         itemIndex = new RandomItem().getRandomItem(itemQuantity);
 
@@ -232,8 +222,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Выбирает товар из списка по индексу и переходит на страницу товара
      */
-    @Description("13. Выбрать товар под номером, полученным в п.12. ( Перейти на страницу товара )")
-    @Test(dependsOnMethods = {"getSecondItemIndexTest"})
+    @Test(dependsOnMethods = {"getSecondItemIndexTest"}, description = "13. Выбрать товар под номером, полученным в п.12. ( Перейти на страницу товара )")
     public void getSecondItemPageTest() {
         wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("tiles")));
@@ -253,8 +242,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Сохраняет информацию со страницы товара
      */
-    @Description("14. Запомнить стоимость и название данного товара")
-    @Test(dependsOnMethods = {"getSecondItemPageTest"})
+    @Test(dependsOnMethods = {"getSecondItemPageTest"}, description = "14. Запомнить стоимость и название данного товара")
     public void getSecondItemDetailsTest() {
         detail = driver.findElement(By.className("detail"));
 
@@ -272,8 +260,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Добавляет товар в корзину
      */
-    @Description("15. Добавить товар в корзину")
-    @Test(dependsOnMethods = {"getSecondItemDetailsTest"})
+    @Test(dependsOnMethods = {"getSecondItemDetailsTest"}, description = "15. Добавить товар в корзину")
     public void addToCartSecondItemTest() {
         detail.findElement(By.cssSelector("div._7db0fb[data-v-c66bfbbc]")).click();
 
@@ -283,16 +270,14 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Провеяет количество товаров в корзине
      */
-    @Description("16. Проверить то, что в корзине два товара. ( Проверка количества товаров в корзине. Может\n" +
+    @Test(dependsOnMethods = {"addToCartSecondItemTest"}, description = "16. Проверить то, что в корзине два товара. ( Проверка количества товаров в корзине. Может\n" +
             "быть произведена без открытия корзины, а проверяя значение в header сайта, где указано\n" +
             "количество товаров в корзине )")
-    @Test(dependsOnMethods = {"addToCartSecondItemTest"})
     public void checkCartByHeader() {
         driver.navigate().refresh();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
-        WebElement headerElement = driver.findElement(By.tagName("header")).findElement(
-                By.cssSelector("span.f-caption--bold.ef9580"));
+        WebElement headerElement = driver.findElement(By.tagName("header")).findElement(By.cssSelector("span.f-caption--bold.ef9580"));
 
         int cartItemCounter = Integer.parseInt(headerElement.getText());
 
@@ -302,8 +287,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Осуществляет переход в корзину
      */
-    @Description("17. Открыть корзину")
-    @Test(dependsOnMethods = {"checkCartByHeader"})
+    @Test(dependsOnMethods = {"checkCartByHeader"}, description = "17. Открыть корзину")
     public void goToCartTest() {
         driver.findElement(By.tagName("header")).findElement(By.cssSelector("[href=\"/cart\"]")).click();
 
@@ -319,8 +303,7 @@ public class OzonTest extends WebDriverSettings {
      * Проверяет на соответствие выбранные товары с добавленными в корзину
      * и верный расчет итоговой суммы
      */
-    @Description("18. Проверить то, что в корзине раннее выбранные товары и итоговая стоимость по двум товарам рассчитана верно")
-    @Test(dependsOnMethods = {"goToCartTest"})
+    @Test(dependsOnMethods = {"goToCartTest"}, description = "18. Проверить то, что в корзине раннее выбранные товары и итоговая стоимость по двум товарам рассчитана верно")
     public void cartAfterAddingSecondProduct() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div._83a4a5.column__item_remove-margin")));
 
@@ -352,8 +335,7 @@ public class OzonTest extends WebDriverSettings {
     /**
      * Удаляет все товары из корзины
      */
-    @Description("19. Удалить из корзины все товары")
-    @Test(dependsOnMethods = {"cartAfterAddingSecondProduct"})
+    @Test(dependsOnMethods = {"cartAfterAddingSecondProduct"}, description = "19. Удалить из корзины все товары")
     public void removeItemFromCartTest() {
         WebElement removeElement = driver.findElementByCssSelector("div.e276f9.column__item_remove-margin");
         removeElement.findElement(By.cssSelector("span.dc5e23.a443c8")).click();
@@ -366,13 +348,13 @@ public class OzonTest extends WebDriverSettings {
 
         WebElement webElement = driver.findElement(By.xpath("/html/body/div[5]"));
         webElement.findElement(By.cssSelector("div.modal-mask.light")).findElement(By.cssSelector("button[class=\"button.button.blue\"]")).click();
+        itemArrayList.clear();
     }
 
     /**
      * Проверяет корзину на отсутствие товаров
      */
-    @Description("20. Проверить, что корзина пуста")
-    @Test(dependsOnMethods = {"removeItemFromCartTest"})
+    @Test(dependsOnMethods = {"removeItemFromCartTest"}, description = "20. Проверить, что корзина пуста")
     public void EmptyCartTest() {
         wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.bd9af9.column__item_remove-margin")));

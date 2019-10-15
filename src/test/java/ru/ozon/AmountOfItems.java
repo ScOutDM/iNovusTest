@@ -8,7 +8,7 @@ import java.util.List;
  * Класс суммирует общую стоимость вещей в списке
  */
 public class AmountOfItems {
-    private int itemsAmount;
+    private int itemAmount;
 
     /**
      * Метод для получения общей стоимости всех вещей в списке
@@ -18,8 +18,8 @@ public class AmountOfItems {
     public int getItemAmount(List<Item> items){
         for (Item i : items) {
             String price = i.getPrice().replaceAll("[^0-9]", "");
-            itemsAmount += Integer.parseInt(price);
+            itemAmount += Integer.parseInt(price);
         }
-        return itemsAmount;
+        return itemAmount;
     }
 }
