@@ -64,7 +64,7 @@ public class OzonTest extends WebDriverSettings {
     }
 
     /**
-     * Осуществляет переход в категорию товаров по указанной ссылке
+     * Осуществляет переход в категорию товаров
      */
     @Description("2. В меню \"Каталог\" выбрать категорию \"Музыка\"")
     @Test(dependsOnMethods = {"urlOpeningTest"})
@@ -76,7 +76,7 @@ public class OzonTest extends WebDriverSettings {
     }
 
     /**
-     * Осуществляет переход в подкатегорию товаров по указанной ссылке
+     * Осуществляет переход в подкатегорию товаров
      */
     @Description("3. С открывшейся страницы перейти на страницу \"Виниловые пластинки\"")
     @Test(dependsOnMethods = {"categoryOpeningTest"})
@@ -89,12 +89,12 @@ public class OzonTest extends WebDriverSettings {
     }
 
     /**
-     * Получает DOM список товаров
+     * Получает DOM список товаров из документа
      */
     @Description("4. Проверить, что открылся список товаров")
     @Test(dependsOnMethods = {"categorySelectionTest"})
     public void checkNotEmptyItemListTest() {
-        itemSearchResult = driver.findElement(By.cssSelector("div.content[data-v-4d7067c2]"));
+        itemSearchResult = driver.findElement(By.cssSelector("div.tiles[data-v-4d7067c2]"));
         itemList = itemSearchResult.findElements(By.className("inner-link"));
 
         Assert.assertNotNull(itemList);
@@ -112,7 +112,7 @@ public class OzonTest extends WebDriverSettings {
     }
 
     /**
-     * Использует класс RandomItem() для генерации случайного числа
+     * Использует класс RandomItem() для генерации случайного индекса товара
      */
     @Description("6. Сгенерировать случайное число в диапазоне от 1 до количества товаров, полученного в п.5")
     @Test(dependsOnMethods = {"getTheQuantityOfItemsTest"})
@@ -137,18 +137,19 @@ public class OzonTest extends WebDriverSettings {
     }
 
     /**
-     * Сохраняет информацию со страницы товара
+     * Сохраняет информацию о товаре в ссылочной переменной
      */
     @Description("8. Запомнить стоимость и название данного товара")
     @Test(dependsOnMethods = {"getItemPageTest"})
     public void getItemDetailsTest() {
         detail = driver.findElement(By.className("detail"));
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("h1")));
+        wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h1")));
 
         item = new Item(
-                detail.findElement(By.cssSelector("h1._718dda")).getText(),
-                detail.findElement(By.className("top-sale-block")).findElement(By.cssSelector("span.b3411b._04b877")).getText()
+                driver.findElement(By.cssSelector("h1._718dda")).getText(),
+                driver.findElement(By.cssSelector("span.b3411b")).getText()
         );
 
         Assert.assertNotNull(item);
@@ -175,7 +176,7 @@ public class OzonTest extends WebDriverSettings {
     public void cartAfterAddingFirstProduct() {
         try {
             Thread.sleep(3000);
-        } catch (InterruptedException e) {  //TODO: исправить ожидание нажатия кнопки для перехода в корзину
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -194,22 +195,25 @@ public class OzonTest extends WebDriverSettings {
     }
 
     /**
-     * Возвращение на страницу подкатегории
+     * Возвращает на страницу подкатегории
      */
     @Description("11. Вернуться на страницу \"Виниловые пластинки\"")
     @Test(dependsOnMethods = {"cartAfterAddingFirstProduct"})
     public void getBackTest() {
-        wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("button.ef8c70")));
-        driver.findElementByTagName("button.ef8c70").click();
+        driver.findElement(By.cssSelector("button[value=\"Каталог\"]")).click();
+        driver.findElement(By.cssSelector("[href=\"/category/muzyka-13100/\"]")).click();
 
         wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.elementToBeClickable(By.tagName("a[href=\"/category/muzyka-13100/\"]")));
-        driver.findElementByTagName("a[href=\"/category/muzyka-13100/\"]").click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("button[value=\"Каталог\"]")));
+        driver.findElement(By.cssSelector("button[value=\"Каталог\"]")).click();
 
         wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.elementToBeClickable(By.tagName("a[href=\"/category/vinilovye-plastinki-31667/\"]"))).click();
-        driver.findElementByTagName("a[href=\"/category/vinilovye-plastinki-31667/\"]");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("a[href=\"/category/muzyka-13100/\"]")));
+        driver.findElement(By.cssSelector("[href=\"/category/muzyka-13100/\"]")).click();
+
+        wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[href=\"/category/vinilovye-plastinki-31667/\"]"))).click();
+        driver.findElement(By.cssSelector("[href=\"/category/vinilovye-plastinki-31667/\"]"));
 
         Assert.assertEquals(driver.getCurrentUrl(), "https://www.ozon.ru/category/vinilovye-plastinki-31667/");
     }
@@ -231,12 +235,16 @@ public class OzonTest extends WebDriverSettings {
     @Description("13. Выбрать товар под номером, полученным в п.12. ( Перейти на страницу товара )")
     @Test(dependsOnMethods = {"getSecondItemIndexTest"})
     public void getSecondItemPageTest() {
+        wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("tiles")));
+
         itemSearchResult = driver.findElement(By.cssSelector("div.content[data-v-4d7067c2]"));
         itemList = itemSearchResult.findElements(By.className("inner-link"));
 
         WebElement itemByIndex = itemList.get(itemIndex);
         itemByIndex.click();
 
+        wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("detail")));
 
         Assert.assertNotNull(itemByIndex);
@@ -250,11 +258,12 @@ public class OzonTest extends WebDriverSettings {
     public void getSecondItemDetailsTest() {
         detail = driver.findElement(By.className("detail"));
 
+        wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("h1")));
 
         item = new Item(
                 detail.findElement(By.cssSelector("h1._718dda")).getText(),
-                detail.findElement(By.className("top-sale-block")).findElement(By.className("b3411b")).getText()
+                driver.findElement(By.cssSelector("span.b3411b")).getText()
         );
 
         Assert.assertNotNull(item);
@@ -266,7 +275,7 @@ public class OzonTest extends WebDriverSettings {
     @Description("15. Добавить товар в корзину")
     @Test(dependsOnMethods = {"getSecondItemDetailsTest"})
     public void addToCartSecondItemTest() {
-        detail.findElement(By.cssSelector("button._652bc6")).click();
+        detail.findElement(By.cssSelector("div._7db0fb[data-v-c66bfbbc]")).click();
 
         itemArrayList.add(item);
     }
@@ -296,7 +305,14 @@ public class OzonTest extends WebDriverSettings {
     @Description("17. Открыть корзину")
     @Test(dependsOnMethods = {"checkCartByHeader"})
     public void goToCartTest() {
-        driver.findElement(By.tagName("header")).findElement(By.cssSelector("[href=\"/cart\"]")).click(); //TODO: Assert
+        driver.findElement(By.tagName("header")).findElement(By.cssSelector("[href=\"/cart\"]")).click();
+
+        wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("cart-item")));
+
+        WebElement cartItem = driver.findElement(By.className("cart-item"));
+
+        Assert.assertNotNull(cartItem);
     }
 
     /**
@@ -344,13 +360,11 @@ public class OzonTest extends WebDriverSettings {
 
         try {
             Thread.sleep(5000);
-        } catch (InterruptedException e) { //TODO: удаление товаров из корзины
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         WebElement webElement = driver.findElement(By.xpath("/html/body/div[5]"));
-        System.out.println("element : " + webElement.getText());
-
         webElement.findElement(By.cssSelector("div.modal-mask.light")).findElement(By.cssSelector("button[class=\"button.button.blue\"]")).click();
     }
 
@@ -360,8 +374,10 @@ public class OzonTest extends WebDriverSettings {
     @Description("20. Проверить, что корзина пуста")
     @Test(dependsOnMethods = {"removeItemFromCartTest"})
     public void EmptyCartTest() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("bd9af9.column__item_remove-margin")));
+        wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.bd9af9.column__item_remove-margin")));
 
-        Assert.assertNull(driver.findElementByCssSelector("div.bd9af9.column__item_remove-margin"));
+        WebElement emptyCart = driver.findElement(By.cssSelector("div.bd9af9.column__item_remove-margin"));
+        Assert.assertNotNull(emptyCart);
     }
 }

@@ -7,6 +7,7 @@ import java.util.Random;
  */
 public class RandomItem {
     private Random random = new Random();
+    private int randomItem;
 
     /**
      *  Метод для получения случайного числа {@link OzonTest#itemIndex}
@@ -14,6 +15,7 @@ public class RandomItem {
      * @return возвращает случайное число
      */
     public int getRandomItem(int itemQuantity) {
-        return random.nextInt(itemQuantity); //TODO:
+        randomItem = random.nextInt(itemQuantity);
+        return randomItem;
     }
 }
